@@ -1,0 +1,94 @@
+关于字符串中每个单词的首字母大写化问题
+
+问题描述
+
+是不是有时候会出现将一个字符串中的每个单词的首字母大写化，其余字符均为小写的情况，如"hello world"转化为"Hello World"。好了接下来大家可以试验一下是否可以解决这个问题，在这里我要和大家分享几种比较容易理解的解决方案。
+
+问题分析
+
+使用 split() 方法将字符串分解为单词数组
+使用 toLowerCase() 方法将数组中的每一项均小写化
+使用 replace() 以及 toUpperCase() 方法将数组中的每一项的首字母大写化，之后使用 join() 方法组合成一个新的字符串
+解决方案
+
+for + replace()
+
+function titleCase(str) {
+    //将字符串分解为数组并将其小写化
+    var convertToArray = str.toLowerCase().split(" ");
+
+    for(var i = 0;i < convertToArray.length;i++){
+        var char = convertToArray[i].charAt(0);
+        //使用 replace()方法将数组中的每个首字母大写化
+        convertToArray[i]=convertToArray[i].replace(char,function replace(char){
+            return char.toUpperCase();
+            });
+    }
+    return convertToArray.join(" ");
+}
+
+titleCase("hello world");   //"Hello World" 
+map() + replace()
+
+大家是不是看着这个代码有点繁杂，，好了接下来我们使用 map() 函数进行简化：
+
+function titleCase(str) {
+    var convertToArray = str.toLowerCase().split(" ");
+    var result = convertToArray.map(function(val){
+        return val.replace(val.charAt(0), val.charAt(0).toUpperCase());
+    });
+    return result.join(" ");
+}
+titleCase("hello world");   //"Hello World" 
+for ··· in + replace()
+
+大家是否还记得数组遍历中的 for ··· in 方法，，是滴，这里也可以使用，如下所示:
+
+function titleCase(str) {
+    str = str.toLowerCase().split(' ');
+    for (var i in str) {
+        str[i] = str[i].replace(str[i].charAt(0), str[i].charAt(0).toUpperCase());
+    };
+    return str.join(' ');
+}
+titleCase("hello world");   //"Hello World" 
+map() + slice()
+
+这里也可以不使用 replace() 方法，而是使用 slice() 方法进行大写化的首字母与其余字符串的拼接，如下所示:
+
+function titleCase(str) {
+    return str.toLowerCase().split(' ').map(function(word) {
+        return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
+}
+titleCase("hello world");  //"Hello World"
+正则匹配替换
+
+思路分解:
+
+利用正则表达式 /\w\S*/g 匹配出每一个单词，其实类似于字符串的数组分解
+使用 replace() 以及 substr() 方法进行首字母大写替换以及其余字符的小写化
+代码如下：
+
+function titleCase(str) {
+    return str.replace(/\w\S*/g, function(word){
+        return word.charAt(0).toUpperCase()+word.substr(1).toLowerCase();});
+}
+titleCase("I'm a little tea pot", "");
+ES6解决方案
+
+思路分解:
+
+/( |^)[a-z]/g - 匹配出整个字符串最开始的首字母以及以空格分隔的每个单词的首字母。
+使用 replace() 方法进行首字母大写化替换。
+function titleCase(str) {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+}
+这里大家是不是看见 => 这个符号有点蒙，，刚开始我也不知道这个代表什么，后来才找资料原来是ES6中的箭头符号，，简单举个例子大家就会明白了。
+
+// 转码前
+input.map(item => item + 1);
+// 转码后
+input.map(function (item) {
+  return item + 1;
+});
